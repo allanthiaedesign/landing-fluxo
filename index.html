@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Fluxo — automações que economizam suas horas</title>
+<style>
+  :root{
+    --bg:#0b0f1a; --ink:#0b0f1a; --paper:#ffffff; --muted:#5b647a;
+    --brand:#3d5afe; --brand2:#8a5cff; --soft:#eef1ff; --line:#e6e9f2;
+    --ok:#12b981; --shadow:0 20px 50px -20px rgba(30,40,90,.35);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--ink);background:var(--paper);line-height:1.55}
+  a{text-decoration:none;color:inherit}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+  .btn{display:inline-block;padding:13px 22px;border-radius:12px;font-weight:700;font-size:15px;transition:.15s}
+  .btn-primary{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;box-shadow:var(--shadow)}
+  .btn-primary:hover{transform:translateY(-2px)}
+  .btn-ghost{border:1px solid var(--line);color:var(--ink)}
+  .btn-ghost:hover{background:var(--soft)}
+  /* nav */
+  nav{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:66px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px}
+  .logo .mk{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--brand),var(--brand2))}
+  .navlinks{display:flex;gap:28px;align-items:center;color:var(--muted);font-weight:500;font-size:15px}
+  .navlinks a:hover{color:var(--ink)}
+  /* hero */
+  .hero{padding:86px 0 70px;text-align:center;background:
+     radial-gradient(60% 60% at 50% 0%,rgba(61,90,254,.08),transparent 70%)}
+  .pill{display:inline-flex;gap:8px;align-items:center;background:var(--soft);color:var(--brand);
+     font-weight:600;font-size:13px;padding:7px 14px;border-radius:30px;margin-bottom:22px}
+  .hero h1{font-size:clamp(34px,5.4vw,58px);line-height:1.06;letter-spacing:-.02em;max-width:14ch;margin:0 auto 20px}
+  .hero h1 .grad{background:linear-gradient(120deg,var(--brand),var(--brand2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{font-size:clamp(16px,2.2vw,20px);color:var(--muted);max-width:56ch;margin:0 auto 30px}
+  .cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .trust{margin-top:26px;color:var(--muted);font-size:13px}
+  .mock{margin:54px auto 0;max-width:920px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+  .mock .bar{display:flex;gap:7px;padding:13px 16px;border-bottom:1px solid var(--line);background:#fafbff}
+  .mock .bar i{width:11px;height:11px;border-radius:50%;background:#e2e6f2;display:block}
+  .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:34px 26px}
+  .node{background:var(--soft);border:1px solid #dfe4ff;border-radius:13px;padding:16px 14px;text-align:left;position:relative}
+  .node b{font-size:14px;display:block}.node small{color:var(--muted);font-size:12px}
+  .node:not(:last-child)::after{content:"→";position:absolute;right:-13px;top:50%;transform:translateY(-50%);color:#c4ccf0;font-weight:800}
+  /* sections */
+  section{padding:76px 0}
+  .eyebrow{color:var(--brand);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:13px;text-align:center}
+  .h2{font-size:clamp(26px,3.6vw,38px);text-align:center;letter-spacing:-.02em;margin:10px auto 12px;max-width:20ch}
+  .sub{color:var(--muted);text-align:center;max-width:60ch;margin:0 auto 46px;font-size:17px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .feat{border:1px solid var(--line);border-radius:16px;padding:26px 24px;transition:.15s}
+  .feat:hover{box-shadow:var(--shadow);transform:translateY(-3px)}
+  .feat .ic{width:46px;height:46px;border-radius:12px;background:var(--soft);display:grid;place-items:center;font-size:22px;margin-bottom:16px}
+  .feat h3{font-size:18px;margin-bottom:8px}
+  .feat p{color:var(--muted);font-size:15px}
+  .steps{background:#0b0f1a;color:#fff;border-radius:26px;padding:60px 40px}
+  .steps .h2,.steps .sub{color:#fff}.steps .sub{color:#9aa3c7}
+  .stepgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:20px}
+  .step .n{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--brand),var(--brand2));display:grid;place-items:center;font-weight:800;margin-bottom:14px}
+  .step h3{font-size:19px;margin-bottom:6px}.step p{color:#9aa3c7;font-size:15px}
+  .price{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:stretch}
+  .plan{border:1px solid var(--line);border-radius:18px;padding:30px 26px;display:flex;flex-direction:column}
+  .plan.pop{border-color:var(--brand);box-shadow:var(--shadow);position:relative}
+  .plan.pop .badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--brand);color:#fff;font-size:12px;font-weight:700;padding:5px 14px;border-radius:20px}
+  .plan h3{font-size:17px;color:var(--muted)}
+  .plan .val{font-size:38px;font-weight:800;margin:8px 0 2px}.plan .val small{font-size:15px;color:var(--muted);font-weight:500}
+  .plan ul{list-style:none;margin:18px 0 24px;display:flex;flex-direction:column;gap:11px}
+  .plan li{padding-left:26px;position:relative;font-size:15px}
+  .plan li::before{content:"✓";position:absolute;left:0;color:var(--ok);font-weight:800}
+  .plan .btn{margin-top:auto;text-align:center}
+  .final{text-align:center;background:radial-gradient(60% 100% at 50% 0%,rgba(138,92,255,.12),transparent);border-radius:26px;padding:66px 24px}
+  footer{border-top:1px solid var(--line);padding:34px 0;color:var(--muted);font-size:14px}
+  footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+  @media(max-width:820px){
+    .navlinks{display:none}
+    .flow{grid-template-columns:1fr 1fr}.node:not(:last-child)::after{display:none}
+    .grid3,.stepgrid,.price{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+  <div class="logo"><span class="mk"></span> Fluxo</div>
+  <div class="navlinks">
+    <a href="#recursos">Recursos</a><a href="#como">Como funciona</a><a href="#planos">Planos</a>
+    <a href="#planos" class="btn btn-primary" style="padding:9px 18px">Começar grátis</a>
+  </div>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <span class="pill">⚡ Automação sem código para o seu negócio</span>
+  <h1>Automatize o trabalho chato e <span class="grad">ganhe suas horas de volta</span></h1>
+  <p>O Fluxo conecta suas ferramentas e deixa a IA cuidar do repetitivo — atendimento, follow-up,
+     relatórios e integrações. Você foca no que importa.</p>
+  <div class="cta">
+    <a href="#planos" class="btn btn-primary">Começar grátis</a>
+    <a href="#como" class="btn btn-ghost">Ver como funciona</a>
+  </div>
+  <div class="trust">Sem cartão de crédito · Configuração em minutos</div>
+
+  <div class="mock">
+    <div class="bar"><i></i><i></i><i></i></div>
+    <div class="flow">
+      <div class="node"><b>📩 Nova mensagem</b><small>WhatsApp / Instagram</small></div>
+      <div class="node"><b>🧠 IA entende</b><small>Classifica e responde</small></div>
+      <div class="node"><b>🔀 Roteia</b><small>Humano ou automático</small></div>
+      <div class="node"><b>📊 Registra</b><small>CRM + relatório</small></div>
+    </div>
+  </div>
+</div></header>
+
+<section id="recursos"><div class="wrap">
+  <p class="eyebrow">Recursos</p>
+  <h2 class="h2">Tudo que você precisa para automatizar</h2>
+  <p class="sub">Blocos prontos que se conectam às ferramentas que você já usa.</p>
+  <div class="grid3">
+    <div class="feat"><div class="ic">🤖</div><h3>Atendimento com IA</h3><p>Responde dúvidas comuns na hora, qualifica leads e chama um humano quando precisa.</p></div>
+    <div class="feat"><div class="ic">🔗</div><h3>Integrações</h3><p>Conecte WhatsApp, planilhas, CRM, e-mail e centenas de apps sem escrever código.</p></div>
+    <div class="feat"><div class="ic">⏰</div><h3>Rotinas agendadas</h3><p>Relatórios, cobranças e follow-ups disparados automaticamente no horário certo.</p></div>
+    <div class="feat"><div class="ic">✅</div><h3>Aprovação humana</h3><p>A IA prepara, você aprova com um toque antes de qualquer envio importante.</p></div>
+    <div class="feat"><div class="ic">📈</div><h3>Métricas claras</h3><p>Veja quanto tempo cada automação economizou e o que precisa de atenção.</p></div>
+    <div class="feat"><div class="ic">🔒</div><h3>Seguro por padrão</h3><p>Seus dados isolados por conta, com controle de acesso e trilha de auditoria.</p></div>
+  </div>
+</div></section>
+
+<section id="como"><div class="wrap"><div class="steps">
+  <p class="eyebrow" style="color:#8ea2ff">Como funciona</p>
+  <h2 class="h2">Do zero ao automático em 3 passos</h2>
+  <p class="sub">Sem instalação, sem equipe de TI.</p>
+  <div class="stepgrid">
+    <div class="step"><div class="n">1</div><h3>Conecte</h3><p>Ligue suas ferramentas em poucos cliques com integrações prontas.</p></div>
+    <div class="step"><div class="n">2</div><h3>Monte o fluxo</h3><p>Arraste os blocos ou comece por um modelo pronto para o seu caso.</p></div>
+    <div class="step"><div class="n">3</div><h3>Deixe rodar</h3><p>O Fluxo trabalha 24/7 e te avisa só quando precisar de você.</p></div>
+  </div>
+</div></div></section>
+
+<section id="planos"><div class="wrap">
+  <p class="eyebrow">Planos</p>
+  <h2 class="h2">Preço simples, sem surpresa</h2>
+  <p class="sub">Comece grátis e cresça quando fizer sentido.</p>
+  <div class="price">
+    <div class="plan"><h3>Início</h3><div class="val">R$0<small>/mês</small></div>
+      <ul><li>2 automações ativas</li><li>500 execuções/mês</li><li>Integrações essenciais</li><li>Suporte por e-mail</li></ul>
+      <a href="#" class="btn btn-ghost">Começar grátis</a></div>
+    <div class="plan pop"><span class="badge">Mais popular</span><h3>Pro</h3><div class="val">R$97<small>/mês</small></div>
+      <ul><li>Automações ilimitadas</li><li>20.000 execuções/mês</li><li>IA de atendimento</li><li>Aprovação humana</li><li>Suporte prioritário</li></ul>
+      <a href="#" class="btn btn-primary">Assinar o Pro</a></div>
+    <div class="plan"><h3>Empresa</h3><div class="val">Sob medida</div>
+      <ul><li>Volume dedicado</li><li>SSO e permissões</li><li>Onboarding assistido</li><li>SLA e gerente de conta</li></ul>
+      <a href="#" class="btn btn-ghost">Falar com vendas</a></div>
+  </div>
+</div></section>
+
+<section><div class="wrap"><div class="final">
+  <h2 class="h2">Pronto para recuperar suas horas?</h2>
+  <p class="sub">Crie sua primeira automação hoje — leva menos de 5 minutos.</p>
+  <a href="#" class="btn btn-primary">Começar grátis agora</a>
+</div></div></section>
+
+<footer><div class="wrap">
+  <div class="logo" style="font-size:16px"><span class="mk"></span> Fluxo</div>
+  <div>Protótipo de landing page · produto fictício · feito por Allan Thurler</div>
+</div></footer>
+</body>
+</html>
